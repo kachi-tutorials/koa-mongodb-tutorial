@@ -1,10 +1,10 @@
-# Prerequisite
+# KOA MongoDB Server
 
 Before you start this part, make sure you have read [**part 1**](https://github.com/tutorial-point/koa-server-tutorial) of this tutorial series as we're gonna be starting from there.
 
 In this tutorial, we'll be connecting a **`Mongo database`** to our Koa JS server.
 
-# KOA MongoDB Server
+## Prerequisite
 
 Before we start let's make sure we have [**`MongoDB`**](https://www.mongodb.com/docs/manual/tutorial/install-mongodb-on-os-x/) installed.
 
