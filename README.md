@@ -1,20 +1,24 @@
-In this part, we'll be starting from where we left off in part 1 but create a NoSQL database instead. To do this we'll be using **MongoDB**.
+# Prerequisite
 
-Before we start let's make sure we have [**MongoDB**](https://www.mongodb.com/docs/manual/tutorial/install-mongodb-on-os-x/) installed.
+Before you start this part, make sure you have read [**part 1**](https://github.com/tutorial-point/koa-server-tutorial) of this tutorial series
 
-Run the following command:
+# KOA MongoDB Server
+
+Before we start let's make sure we have [**`MongoDB`**](https://www.mongodb.com/docs/manual/tutorial/install-mongodb-on-os-x/) installed.
+
+Run the following command to check:
 
 ```
 mongod --version
 ```
 
-If it's installed, let's proceed.
+If **`MongoDB`** is installed, let's proceed.
 
 ## Setup
 
-MongoDB is non-relational database, meaning each object we post into our database does not need to have the same keys. But mongoose allows us to set up schemas which makes our types more strict.
+**`MongoDB`** is non-relational database, meaning each object we post into our database does not need to have the same keys. But **`Mongoose`** allows us to set up schemas which makes our types more strict.
 
-In this tutorial we will be using [**Mongoose**](https://mongoosejs.com/). So let's start by installing **Mongoose**:
+In this tutorial we will be using [**`Mongoose`**](https://mongoosejs.com/). So let's start by installing **`Mongoose`**:
 
 ```
 npm i mongoose
@@ -22,134 +26,146 @@ npm i mongoose
 
 ## Models
 
-Once mongoose is installed let's create our **models folder** and our first model and called it **event.models.js**.
+Once **`mongoose`** is installed, let's create a directory named **`models`** and our first model.
 
-So let's run the following commands:
+Run the following commands:
 
-```
+```bash
 mkdir models
-touch models/index.js
-touch models/event.models.js
+touch models/index.js models/event.models.js
 ```
 
-These commands will create a folder with two files named **index.js** and **event.models.js**.
+These commands will create the following:
 
-Let's first add the following code to **index.js**:
+1. A directory named **`models`**
+2. A file titled **`index.js`**
+3. A file titled **`event.models.js`**
 
-```
-const mongoose = require('mongoose');
+Let's first add the following code to **`index.js`**:
+
+```javascript
+const mongoose = require("mongoose");
 
 const settings = {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-}
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+};
 
 mongoose.connect("mongodb://localhost:27017/database", settings);
 
 module.exports = mongoose;
 ```
 
-This file will connect us to our mongoDB database.
+This file will connect us to our **`MongoDB`** database.
 
-## Create our first model
+### Creating our model
 
-Now let's add the following to **event.models.js**:
+Now let's add the following to **`event.models.js`**:
 
-```
-const { Schema, model } = require('.');
+```javascript
+const { Schema, model } = require(".");
 
 const eventsSchema = new Schema({
-    attendees: Number,
-    name: String,
-    adultsOnly: Boolean,
-    description: String,
-    organizers: String
+  attendees: Number,
+  name: String,
+  adultsOnly: Boolean,
+  description: String,
+  organizers: String,
 });
 
-const Events = model('Events', eventsSchema);
+const Events = model("Events", eventsSchema);
 
 module.exports = Events;
 ```
 
 These are the types we've just created:
 
-1. **Name** - this will be a string representing the name of the event.
-2. **Adults Only** - this will be a boolean field.
-3. **Attendees** - this will be a number representing the number of attendees.
-4. **Description** - this will also be a string field.
+1. **`name`** - this will be a string representing the name of the event.
+2. **`adultsOnly`** - this will be a boolean field.
+3. **`attendees`** - this will be a number representing the number of attendees.
+4. **`description`** - this will also be a string field.
 
-## Controllers
+## Updating our controllers
 
-Let's import the model we just created into our controllers file.
+We should now change the import in our **`event.controllers.js`** file to:
 
+```bash
+const events = require('../models/events.models');
 ```
-const events = require('../models/events');
-```
 
-## Post Request
+### Post Request
 
-Let's now update our post request in our **event.controllers.js**
+Let's update the **`postEvent`** controller in our **`event.controllers.js`** with the following code:
 
-The post request takes the request body and creates an object in our mongo database.
-
-- A successful request will return **'Event Created!'**,
-- An unsuccessful request will return a status **500 error**.
-
-```
-const postEvent = async ctx => {
-    try {
-        await Events.create(ctx.request.body);
-        ctx.body = 'Event Created!'
-        ctx.status = 201;
-    } catch (e) {
-        console.log(err)
-        ctx.status = 500
-        throw(err)
-    }
+```javascript
+const postEvent = async (ctx) => {
+  try {
+    await Events.create(ctx.request.body);
+    ctx.body = "Event Created!";
+    ctx.status = 201;
+  } catch (e) {
+    console.log(err);
+    ctx.status = 500;
+    throw err;
+  }
 };
 ```
 
-Try posting an item to the following endpoint on postman [**http://127.0.0.1:8000/post_event**](http://127.0.0.1:8000/post_event):
+The post request takes the request body and creates an object in our MongoDB database.
 
-![Postman Image](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/gxzjtsd0img7gdmjx4vd.png)
+- A successful request returns **`'Event Created!'`**,
+- An unsuccessful request returns a status **500 error**.
 
-Let's move on to the get request!
+Try posting the following code this endpoint: [**`http://127.0.0.1:8000/post_event`**](http://127.0.0.1:8000/post_event)
 
-## Get Request
-
-Let's also update our get request in our **event.controllers.js**.
-
-We need to update our function to make it async and returns all the event items stored in our Mongo database.
-
-```
-const getEvents = async ctx => {
-    try {
-        const results = await Events.find()
-        ctx.body = results
-        ctx.status = 200
-    } catch (err) {
-        console.log(err)
-        ctx.status = 500
-        throw(err)
-    }
-}
-```
-
-Try posting an item to the following endpoint on postman [**http://127.0.0.1:8000/events_list**](http://127.0.0.1:8000/events_list):
-
-If this works correctly you should get the following:
-
-```
+```json
 [
-    {
-        "_id": "RANDOM GENERATED ID",
-        "attendees": 100,
-        "name": "test event",
-        "adultsOnly": false,
-        "description": "test event description",
-        "__v": 0
-    }
+  {
+    "name": "test event",
+    "adultsOnly": false,
+    "attendees": 100,
+    "description": "test description"
+  }
 ]
 ```
 
-And that's all she wrote! A mongoDB database with Koa Js, quick and painless.
+### Get Request
+
+In our **`event.controllers.js`** file, let's now update the **`getEvents`** controller.
+
+We need to update our function to make it an async function and return all the event items stored in our postgres. Update **`getEvents`** with the following code:
+
+```javascript
+const getEvents = async (ctx) => {
+  try {
+    const results = await Events.find();
+    ctx.body = results;
+    ctx.status = 200;
+  } catch (err) {
+    console.log(err);
+    ctx.status = 500;
+    throw err;
+  }
+};
+```
+
+Now we can make a **`GET`** request to the following endpoint: [**`http://127.0.0.1:8000/events_list`**](http://127.0.0.1:8000/events_list)
+
+If this works correctly you should get the following:
+
+```json
+[
+  {
+    "_id": "RANDOM GENERATED ID",
+    "attendees": 100,
+    "name": "test event",
+    "adultsOnly": false,
+    "description": "test description",
+    "__v": 0
+  }
+]
+```
+
+And that's all she wrote!
+
+A mongoDB database with Koa Js, quick and painless.
