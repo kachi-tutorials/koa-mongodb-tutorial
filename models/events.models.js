@@ -5,7 +5,7 @@ const eventsSchema = new Schema({
   name: String,
   adultsOnly: Boolean,
   description: String,
-  organizers: String,
+  organizers: String
 });
 
 const Events = model("Events", eventsSchema);

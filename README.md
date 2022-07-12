@@ -1,10 +1,10 @@
-# KOA MongoDB Server
+# Prerequisite
 
 Before you start this part, make sure you have read [**part 1**](https://github.com/tutorial-point/koa-server-tutorial) of this tutorial series as we're gonna be starting from there.
 
 In this tutorial, we'll be connecting a **`Mongo database`** to our Koa JS server.
 
-## Prerequisite
+# KOA MongoDB Server
 
 Before we start let's make sure we have [**`MongoDB`**](https://www.mongodb.com/docs/manual/tutorial/install-mongodb-on-os-x/) installed.
 
@@ -32,14 +32,14 @@ Run the following commands:
 
 ```bash
 mkdir models
-touch models/index.js models/events.models.js
+touch models/index.js models/event.models.js
 ```
 
 These commands will create the following:
 
 1. A directory named **`models`**
 2. A file titled **`index.js`**
-3. A file titled **`events.models.js`**
+3. A file titled **`event.models.js`**
 
 Let's first add the following code to **`index.js`**:
 
@@ -48,7 +48,7 @@ const mongoose = require("mongoose");
 
 const settings = {
   useNewUrlParser: true,
-  useUnifiedTopology: true,
+  useUnifiedTopology: true
 };
 
 mongoose.connect("mongodb://localhost:27017/database", settings);
@@ -70,7 +70,7 @@ const eventsSchema = new Schema({
   name: String,
   adultsOnly: Boolean,
   description: String,
-  organizers: String,
+  organizers: String
 });
 
 const Events = model("Events", eventsSchema);
@@ -90,7 +90,7 @@ These are the types we've just created:
 We should now change the import in our **`event.controllers.js`** file to:
 
 ```bash
-const Events = require('../models/events.models');
+const events = require('../models/events.models');
 ```
 
 ### Post Request
@@ -119,14 +119,12 @@ The post request takes the request body and creates an object in our MongoDB dat
 Try posting the following code this endpoint: [**`http://127.0.0.1:8000/post_event`**](http://127.0.0.1:8000/post_event)
 
 ```json
-[
-  {
-    "name": "test event",
-    "adultsOnly": false,
-    "attendees": 100,
-    "description": "test description"
-  }
-]
+{
+  "name": "test event",
+  "adultsOnly": false,
+  "attendees": 100,
+  "description": "test description"
+}
 ```
 
 ### Get Request

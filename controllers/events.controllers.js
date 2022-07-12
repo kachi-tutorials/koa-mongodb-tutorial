@@ -26,5 +26,5 @@ const postEvent = async (ctx) => {
 
 module.exports = {
   getEvents,
-  postEvent,
+  postEvent
 };
