@@ -32,14 +32,14 @@ Run the following commands:
 
 ```bash
 mkdir models
-touch models/index.js models/event.models.js
+touch models/index.js models/events.models.js
 ```
 
 These commands will create the following:
 
 1. A directory named **`models`**
 2. A file titled **`index.js`**
-3. A file titled **`event.models.js`**
+3. A file titled **`events.models.js`**
 
 Let's first add the following code to **`index.js`**:
 
