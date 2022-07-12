@@ -90,7 +90,7 @@ These are the types we've just created:
 We should now change the import in our **`event.controllers.js`** file to:
 
 ```bash
-const events = require('../models/events.models');
+const Events = require('../models/events.models');
 ```
 
 ### Post Request
